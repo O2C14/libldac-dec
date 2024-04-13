@@ -16,10 +16,10 @@ DECLFUNC void set_output_pcm_ldac(SFINFO *p_sfinfo, char *pp_pcm[],
       int temp;
       for (int isp = 0; isp < nsmpl; isp++) {
         temp = (int)(floor((double)(((double)p_time[isp]) + 0.5)));
-        if (temp < -32768)
-          temp = -32768;
-        if (temp >= 32767)
-          temp = 32767;
+        if (temp < -0x8000)
+          temp = -0x8000;
+        if (temp >= 0x7FFF)
+          temp = 0x7FFF;
         p_pcm[isp] = temp;
       }
     }
@@ -50,8 +50,8 @@ DECLFUNC void set_output_pcm_ldac(SFINFO *p_sfinfo, char *pp_pcm[],
         temp = (long long)(floor((double)(((double)p_time[isp]) * 65536.0 + 0.5)));
         if (temp < -0x80000000LL)
           temp = -0x80000000LL;
-        if (temp >= 0x7FFFFFFF)
-          temp = 0x7FFFFFFF;
+        if (temp >= 0x7FFFFFFFLL)
+          temp = 0x7FFFFFFFLL;
         p_pcm[isp] = *(int*)(&temp);
       }
     }

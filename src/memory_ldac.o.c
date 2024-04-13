@@ -24,8 +24,7 @@ DECLFUNC void *calloc_ldac(
     size_t nmemb,
     size_t size)
 {
-    char *p_mempos; // r3
-    void *v5;       // [sp+4h] [bp-Ch] BYREF
+    char *p_mempos;
 
     p_mempos = p_sfinfo->p_mempos;
     if (p_mempos)
@@ -35,8 +34,7 @@ DECLFUNC void *calloc_ldac(
     }
     else
     {
-        v5 = malloc(nmemb * size);
-        // syspool_get_buff(&v5, nmemb * size);
-        return v5;
+        return malloc(nmemb * size);
+
     }
 }

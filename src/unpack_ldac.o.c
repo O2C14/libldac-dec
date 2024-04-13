@@ -1,13 +1,16 @@
 #include "ldac.h"
 #include "tables.h"
-static void read_unpack_ldac(int nbits, STREAM *p_block, int *p_loc, int *p_idata) {
+static void read_unpack_ldac(int nbits, STREAM *p_block, int *p_loc,
+                             int *p_idata) {
+  STREAM *p_bufptr;
+  register int bpos;
+  register unsigned int tmp;
+  bpos = *p_loc & LDAC_LOC_MASK;
+  p_bufptr = p_block + (*p_loc >> LDAC_LOC_SHIFT);
+  //from big-endian
+  tmp = ((p_bufptr[2]) | (p_bufptr[1] << 8) | (p_bufptr[0] << 16));
   if (*p_loc < LDAC_MAXBITNUM) {
-    *p_idata =
-        ((((p_block[(*p_loc >> 3) + 2]) | (p_block[(*p_loc >> 3) + 1] << 8) |
-           (p_block[(*p_loc >> 3) + 0] << 16))
-          << (*p_loc & LDAC_LOC_MASK)) &
-         0xFFFFFFu) >>
-        (24 - nbits);
+    *p_idata = ((tmp << bpos) & 0xFFFFFFu) >> (24 - nbits);
   } else {
     *p_idata = 0;
   }
@@ -43,8 +46,8 @@ static int unpack_scale_factor_0_ldac(AC *p_ac, STREAM *p_stream, int *p_loc) {
 }
 
 DECLFUNC int unpack_frame_header_ldac(int *p_smplrate_id, int *p_chconfig_id,
-                             int *p_frame_length, int *p_frame_status,
-                             STREAM *p_stream) {
+                                      int *p_frame_length, int *p_frame_status,
+                                      STREAM *p_stream) {
   int loc = 0;
   if (p_stream[0] != LDAC_SYNCWORD) {
     return 0;
@@ -59,19 +62,19 @@ DECLFUNC int unpack_frame_header_ldac(int *p_smplrate_id, int *p_chconfig_id,
   return 1;
 }
 
-DECLFUNC int unpack_raw_data_frame_ldac(SFINFO *p_sfinfo, STREAM *p_stream, int *p_loc,
-                               int *p_nbytes_used) {
+DECLFUNC int unpack_raw_data_frame_ldac(SFINFO *p_sfinfo, STREAM *p_stream,
+                                        int *p_loc, int *p_nbytes_used) {
   int val;
   int FILLCODE;
   int nbytes_filled;
   int wl;
-  int lsp,hsp;
-  int idwl1,idwl2;
+  int lsp, hsp;
+  int idwl1, idwl2;
   int sfc_bitlen;
   HCDEC *p_hcsf;
   int sfc_mode;
-  int nqus,nchs,nsps;
-  int ich,ibk,iqu,isp,i,j;
+  int nqus, nchs, nsps;
+  int ich, ibk, iqu, isp, i, j;
   AB *p_ab;
   AC *p_ac;
   int ext_size;
@@ -163,7 +166,9 @@ DECLFUNC int unpack_raw_data_frame_ldac(SFINFO *p_sfinfo, STREAM *p_stream, int 
                   v88 = v88 | (-1 << sfc_bitlen);
                   if ((v91 & 1) != 0)
                     v89 = v88 & 0x1F;
-                  p_ac->a_idsf[j] =((unsigned char)p_ac->p_ab->ap_ac[0]->a_idsf[j] + v89) &0x1F;
+                  p_ac->a_idsf[j] =
+                      ((unsigned char)p_ac->p_ab->ap_ac[0]->a_idsf[j] + v89) &
+                      0x1F;
                 }
               }
             } else if (!unpack_scale_factor_0_ldac(p_ac, p_stream, p_loc)) {

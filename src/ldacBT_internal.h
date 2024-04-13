@@ -173,7 +173,7 @@ DECLFUNC int  ldacBT_assert_cm( int cm );
 DECLFUNC int  ldacBT_assert_cci( int cci );
 DECLFUNC int  ldacBT_assert_sample_format( LDACBT_SMPL_FMT_T fmt );
 DECLFUNC int  ldacBT_assert_pcm_sampling_freq( int sf );
-DECLFUNC int ldacBT_interleave_pcm(unsigned char *p_pcm, const char **pp_pcm,
+DECLFUNC int  ldacBT_interleave_pcm(unsigned char *p_pcm, const char **pp_pcm,
                           int nsmpl, int nch, LDACBT_SMPL_FMT_T fmt);
 DECLFUNC int  ldacBT_cm_to_cci( int cm );
 DECLFUNC int  ldacBT_cci_to_cm( int cci );
