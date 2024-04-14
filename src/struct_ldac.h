@@ -33,6 +33,9 @@ typedef unsigned int  UINT32;
 typedef long long      INT64;
 
 typedef float         SCALAR;
+
+//typedef double        SCALAR;
+
 #define _scalar(x) x##f
 typedef union {
     float f;

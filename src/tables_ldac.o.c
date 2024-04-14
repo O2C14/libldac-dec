@@ -499,10 +499,20 @@ HCDEC ga_hcdec_sf1_ldac[4] = {
     {&sa_hc_sf1_blen4_ldac, 16u, 4u, 15u, 8u, &sa_hc_sf1_blen4_dec_ldac},
     {&sa_hc_sf1_blen5_ldac, 32u, 5u, 31u, 8u, &sa_hc_sf1_blen5_dec_ldac}};
 
-int get_block_nchs_ldac(int blk_type) {
-  if (!blk_type)
-    return 1;
-  if (blk_type == 1)
-    return 2;
-  return -1;
+int get_block_nchs_ldac(
+int blk_type)
+{
+    int blk_nchs;
+
+    if (blk_type == LDAC_BLKID_MONO) {
+        blk_nchs = 1;
+    }
+    else if (blk_type == LDAC_BLKID_STEREO) {
+        blk_nchs = 2;
+    }
+    else {
+        blk_nchs = -1;
+    }
+
+    return blk_nchs;
 }
