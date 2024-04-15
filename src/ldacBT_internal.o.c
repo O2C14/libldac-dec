@@ -38,36 +38,36 @@ DECLFUNC void ldacBT_param_clear(HANDLE_LDAC_BT hLdacBT) {
 }
 
 /* get ldaclib error code */
-DECLFUNC int ldacBT_check_ldaclib_error_code(HANDLE_LDAC_BT hLdacBT)
-{
-    HANDLE_LDAC hData;
-    int error_code, internal_error_code;
+DECLFUNC int ldacBT_check_ldaclib_error_code(HANDLE_LDAC_BT hLdacBT) {
+  HANDLE_LDAC hData;
+  int error_code, internal_error_code;
 
-    if( hLdacBT == NULL ){ return LDACBT_E_FAIL; }
-    if( (hData = hLdacBT->hLDAC) == NULL ){ return LDACBT_E_FAIL; }
+  if (hLdacBT == NULL) {
+    return LDACBT_E_FAIL;
+  }
+  if ((hData = hLdacBT->hLDAC) == NULL) {
+    return LDACBT_E_FAIL;
+  }
 
-    ldaclib_get_error_code(hData, &error_code);
+  ldaclib_get_error_code(hData, &error_code);
 
-    ldaclib_get_internal_error_code(hData, &internal_error_code);
+  ldaclib_get_internal_error_code(hData, &internal_error_code);
 
-    hLdacBT->error_code = error_code << 10 | internal_error_code;
+  hLdacBT->error_code = error_code << 10 | internal_error_code;
 
-    return LDACBT_S_OK;
+  return LDACBT_S_OK;
 }
-
 
 /* Assertions. */
 DECLFUNC int ldacBT_assert_cm(int cm) {
-  if ((cm != LDACBT_CHANNEL_MODE_STEREO) &&
-      (cm != LDACBT_CHANNEL_MODE_DUAL_CHANNEL) &&
+  if ((cm != LDACBT_CHANNEL_MODE_STEREO) && (cm != LDACBT_CHANNEL_MODE_DUAL_CHANNEL) &&
       (cm != LDACBT_CHANNEL_MODE_MONO)) {
     return LDACBT_ERR_ASSERT_CHANNEL_MODE;
   }
   return LDACBT_ERR_NONE;
 }
 DECLFUNC int ldacBT_assert_cci(int cci) {
-  if ((cci != LDAC_CCI_STEREO) && (cci != LDAC_CCI_DUAL_CHANNEL) &&
-      (cci != LDAC_CCI_MONO)) {
+  if ((cci != LDAC_CCI_STEREO) && (cci != LDAC_CCI_DUAL_CHANNEL) && (cci != LDAC_CCI_MONO)) {
     return LDACBT_ERR_ASSERT_CHANNEL_CONFIG;
   }
   return LDACBT_ERR_NONE;
@@ -89,57 +89,56 @@ DECLFUNC int ldacBT_assert_pcm_sampling_freq(int sampling_freq) {
   return LDACBT_ERR_NONE;
 }
 
-DECLFUNC int ldacBT_interleave_pcm(unsigned char *p_pcm, const char **pp_pcm,
-                                   int nsmpl, int nch, LDACBT_SMPL_FMT_T fmt) {
+DECLFUNC int ldacBT_interleave_pcm(
+    unsigned char* p_pcm, const char** pp_pcm, int nsmpl, int nch, LDACBT_SMPL_FMT_T fmt) {
   if (nsmpl <= 0) {
     return 0;
   }
-  void *p_lch = pp_pcm[0];
-  void *p_rch = pp_pcm[1];
+  void* p_lch = pp_pcm[0];
+  void* p_rch = pp_pcm[1];
   if (nch == 2) {
     switch (fmt) {
-    case LDACBT_SMPL_FMT_S16:
-      for (int i = 0; i < nsmpl; i++) {
-        ((short *)p_pcm)[(i << 1) + 0] = ((short *)p_lch)[i];
-        ((short *)p_pcm)[(i << 1) + 1] = ((short *)p_rch)[i];
-      }
-      return 2 * 2 * nsmpl;
-    case LDACBT_SMPL_FMT_S24:
-      for (int i = 0; i < nsmpl * 3; i += 3) {
-        p_pcm[(i << 1) + 0] = ((unsigned char *)p_lch)[i + 0];
-        p_pcm[(i << 1) + 1] = ((unsigned char *)p_lch)[i + 1];
-        p_pcm[(i << 1) + 2] = ((unsigned char *)p_lch)[i + 2];
-        p_pcm[(i << 1) + 3] = ((unsigned char *)p_rch)[i + 0];
-        p_pcm[(i << 1) + 4] = ((unsigned char *)p_rch)[i + 1];
-        p_pcm[(i << 1) + 5] = ((unsigned char *)p_rch)[i + 2];
-      }
-      return 2 * 3 * nsmpl;
-    case LDACBT_SMPL_FMT_S32:
-    case LDACBT_SMPL_FMT_F32:
-      for (int i = 0; i < nsmpl; i++) {
-        ((unsigned int *)p_pcm)[(i << 1) + 0] = ((unsigned int *)p_lch)[i];
-        ((unsigned int *)p_pcm)[(i << 1) + 1] = ((unsigned int *)p_rch)[i];
-      }
-      return 2 * 4 * nsmpl;
-    default:
-      return 0;
+      case LDACBT_SMPL_FMT_S16:
+        for (int i = 0; i < nsmpl; i++) {
+          ((short*)p_pcm)[(i << 1) + 0] = ((short*)p_lch)[i];
+          ((short*)p_pcm)[(i << 1) + 1] = ((short*)p_rch)[i];
+        }
+        return 2 * 2 * nsmpl;
+      case LDACBT_SMPL_FMT_S24:
+        for (int i = 0; i < nsmpl * 3; i += 3) {
+          p_pcm[(i << 1) + 0] = ((unsigned char*)p_lch)[i + 0];
+          p_pcm[(i << 1) + 1] = ((unsigned char*)p_lch)[i + 1];
+          p_pcm[(i << 1) + 2] = ((unsigned char*)p_lch)[i + 2];
+          p_pcm[(i << 1) + 3] = ((unsigned char*)p_rch)[i + 0];
+          p_pcm[(i << 1) + 4] = ((unsigned char*)p_rch)[i + 1];
+          p_pcm[(i << 1) + 5] = ((unsigned char*)p_rch)[i + 2];
+        }
+        return 2 * 3 * nsmpl;
+      case LDACBT_SMPL_FMT_S32:
+      case LDACBT_SMPL_FMT_F32:
+        for (int i = 0; i < nsmpl; i++) {
+          ((unsigned int*)p_pcm)[(i << 1) + 0] = ((unsigned int*)p_lch)[i];
+          ((unsigned int*)p_pcm)[(i << 1) + 1] = ((unsigned int*)p_rch)[i];
+        }
+        return 2 * 4 * nsmpl;
+      default:
+        return 0;
     }
   } else {
-    if (nch != 1)
-      return 0;
+    if (nch != 1) return 0;
     switch (fmt) {
-    case LDACBT_SMPL_FMT_S16:
-      copy_data_ldac(p_pcm, *pp_pcm, 2 * nsmpl);
-      return 2 * nsmpl;
-    case LDACBT_SMPL_FMT_S24:
-      copy_data_ldac(p_pcm, *pp_pcm, 3 * nsmpl);
-      return 3 * nsmpl;
-    case LDACBT_SMPL_FMT_S32:
-    case LDACBT_SMPL_FMT_F32:
-      copy_data_ldac(p_pcm, *pp_pcm, 4 * nsmpl);
-      return 4 * nsmpl;
-    default:
-      return 0;
+      case LDACBT_SMPL_FMT_S16:
+        copy_data_ldac(p_pcm, *pp_pcm, 2 * nsmpl);
+        return 2 * nsmpl;
+      case LDACBT_SMPL_FMT_S24:
+        copy_data_ldac(p_pcm, *pp_pcm, 3 * nsmpl);
+        return 3 * nsmpl;
+      case LDACBT_SMPL_FMT_S32:
+      case LDACBT_SMPL_FMT_F32:
+        copy_data_ldac(p_pcm, *pp_pcm, 4 * nsmpl);
+        return 4 * nsmpl;
+      default:
+        return 0;
     }
   }
 }

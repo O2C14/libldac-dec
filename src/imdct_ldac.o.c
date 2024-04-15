@@ -1,11 +1,10 @@
 #include "ldac.h"
-static void proc_imdct_core_ldac(SCALAR *p_y, SCALAR *p_x, int nlnn)
-{
+static void proc_imdct_core_ldac(SCALAR* p_y, SCALAR* p_x, int nlnn) {
   int i, j, k;
   int loop1, loop2;
   int coef, index0, index1, offset;
   const int nsmpl = npow2_ldac(nlnn);
-  const int *p_rp;
+  const int* p_rp;
   const SCALAR *p_w, *p_c, *p_s;
   SCALAR a_work[LDAC_MAXLSU];
   SCALAR a, b, c, d;
@@ -24,12 +23,10 @@ static void proc_imdct_core_ldac(SCALAR *p_y, SCALAR *p_x, int nlnn)
 
   cc = p_c[0];
   cs = p_s[0];
-  if (tmp0 > 0)
-  {
+  if (tmp0 > 0) {
     i = 0;
-    do
-    {
-      SCALAR f1, f2, f3, f4; // tmp
+    do {
+      SCALAR f1, f2, f3, f4;  // tmp
       f1 = p_y[p_rp[i + 0]];
       f2 = p_y[p_rp[i + 1]];
       f3 = p_y[p_rp[i + 2]];
@@ -44,20 +41,17 @@ static void proc_imdct_core_ldac(SCALAR *p_y, SCALAR *p_x, int nlnn)
     } while (i != (tmp0 << 2));
   }
   coef = 1;
-  for (i = 1; i < (nlnn - 1); ++i)
-  {
+  for (i = 1; i < (nlnn - 1); ++i) {
     loop1 = nsmpl >> (i + 2);
     loop2 = 1 << i;
     index0 = 0;
     index1 = 1 << (i + 1);
     offset = 1 << (i + 2);
 
-    for (k = 0; k < loop2; ++k)
-    {
+    for (k = 0; k < loop2; ++k) {
       cc = p_c[coef];
       cs = p_s[coef++];
-      for (j = 0; j < loop1; j++)
-      {
+      for (j = 0; j < loop1; j++) {
         a = a_work[index0 + 0];
         b = a_work[index0 + 1];
         c = a_work[index1 + 0] * cc + a_work[index1 + 1] * cs;
@@ -75,20 +69,18 @@ static void proc_imdct_core_ldac(SCALAR *p_y, SCALAR *p_x, int nlnn)
     }
   }
   const int nsmpl_half = nsmpl >> 1;
-  if (nsmpl_half > 0)
-  {
+  if (nsmpl_half > 0) {
     i = 0;
-    do
-    {
+    do {
       p_y[2 * i] = p_s[coef + i] * a_work[2 * i + 1] + p_c[coef + i] * a_work[2 * i];
       p_y[nsmpl - 2 * i - 1] = p_s[coef + i] * a_work[2 * i] - a_work[2 * i + 1] * p_c[coef + i];
       i++;
     } while (nsmpl_half != i);
     i = 0;
-    do
-    {
+    do {
       p_x[i] = p_y[nsmpl_half + i] * p_w[i] - p_w[nsmpl - 1 - i] * p_x[nsmpl + i];
-      p_x[nsmpl_half + i] = -p_w[nsmpl_half - 1 - i] * p_x[nsmpl + nsmpl_half + i] - p_y[nsmpl - 1 - i] * p_w[nsmpl_half + i];
+      p_x[nsmpl_half + i] = -p_w[nsmpl_half - 1 - i] * p_x[nsmpl + nsmpl_half + i] -
+                            p_y[nsmpl - 1 - i] * p_w[nsmpl_half + i];
       p_x[nsmpl + i] = p_y[nsmpl_half - 1 - i];
       p_x[nsmpl + nsmpl_half + i] = p_y[i];
       i++;
@@ -96,21 +88,15 @@ static void proc_imdct_core_ldac(SCALAR *p_y, SCALAR *p_x, int nlnn)
   }
 }
 
-
-DECLFUNC void proc_imdct_ldac(SFINFO *p_sfinfo, int nlnn)
-{
-  AC *p_ac;
+DECLFUNC void proc_imdct_ldac(SFINFO* p_sfinfo, int nlnn) {
+  AC* p_ac;
   int ich;
   int nchs = p_sfinfo->cfg.ch;
-  if (nchs > 0)
-  {
-    for (ich = 0; ich < nchs; ich++)
-    {
+  if (nchs > 0) {
+    for (ich = 0; ich < nchs; ich++) {
       p_ac = p_sfinfo->ap_ac[ich];
       proc_imdct_core_ldac(p_ac->p_acsub->a_spec, p_ac->p_acsub->a_time, nlnn);
     }
   }
   return;
 }
-
-

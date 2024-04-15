@@ -2,12 +2,12 @@
 /***************************************************************************************************
     Calculate Additional Word Length Data
 ***************************************************************************************************/
-void calc_add_word_length_ldac(AC *p_ac) {
+void calc_add_word_length_ldac(AC* p_ac) {
   int iqu;
   int nqus = p_ac->p_ab->nqus;
   int dif;
-  int *p_idsf = p_ac->a_idsf;
-  int *p_addwl = p_ac->a_addwl;
+  int* p_idsf = p_ac->a_idsf;
+  int* p_addwl = p_ac->a_addwl;
 
   clear_data_ldac(p_addwl, LDAC_MAXNQUS * sizeof(int));
 
@@ -45,14 +45,14 @@ void calc_add_word_length_ldac(AC *p_ac) {
 
   return;
 }
-DECLFUNC void reconst_gradient_ldac(AB *p_ab, int lqu, int hqu) {
+DECLFUNC void reconst_gradient_ldac(AB* p_ab, int lqu, int hqu) {
   int grad_qu_h;
   int grad_qu_l;
   int grad_os_l;
   int grad_os_h;
   int tmp;
-  int *p_grad;
-  const unsigned char *p_t;
+  int* p_grad;
+  const unsigned char* p_t;
 
   grad_qu_h = p_ab->grad_qu_h;
   grad_qu_l = p_ab->grad_qu_l;
@@ -84,12 +84,11 @@ DECLFUNC void reconst_gradient_ldac(AB *p_ab, int lqu, int hqu) {
     }
   }
 }
-DECLFUNC void reconst_word_length_ldac(AC *p_ac) {
-
+DECLFUNC void reconst_word_length_ldac(AC* p_ac) {
   int iqu;
   int idwl1, idwl2;
   int *p_idsf, *p_addwl, *p_idwl1, *p_idwl2, *p_grad;
-  AB *p_ab = p_ac->p_ab;
+  AB* p_ab = p_ac->p_ab;
   int hqu = p_ab->nqus;
   int grad_mode = p_ab->grad_mode;
   p_grad = p_ab->a_grad;

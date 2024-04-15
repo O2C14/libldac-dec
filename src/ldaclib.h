@@ -9,35 +9,35 @@ extern "C" {
 ***************************************************************************************************/
 #define LDAC_HOST_ENDIAN_LITTLE
 
-#define LDAC_PRCNCH        2
-#define LDAC_FRMHDRBYTES   3
-#define LDAC_CONFIGBYTES   4
+#define LDAC_PRCNCH      2
+#define LDAC_FRMHDRBYTES 3
+#define LDAC_CONFIGBYTES 4
 
 typedef int LDAC_RESULT;
-#define LDAC_S_OK          ((LDAC_RESULT)0x00000000L)
-#define LDAC_S_FALSE       ((LDAC_RESULT)0x00000001L)
-#define LDAC_E_UNEXPECTED  ((LDAC_RESULT)0x8000FFFFL)
-#define LDAC_E_OUTOFMEMORY ((LDAC_RESULT)0x8007000EL)
-#define LDAC_E_INVALIDARG  ((LDAC_RESULT)0x80070057L)
-#define LDAC_E_FAIL        ((LDAC_RESULT)0x80004005L)
-#define LDAC_E_NOTIMPL     ((LDAC_RESULT)0x80004001L)
+#define LDAC_S_OK              ((LDAC_RESULT)0x00000000L)
+#define LDAC_S_FALSE           ((LDAC_RESULT)0x00000001L)
+#define LDAC_E_UNEXPECTED      ((LDAC_RESULT)0x8000FFFFL)
+#define LDAC_E_OUTOFMEMORY     ((LDAC_RESULT)0x8007000EL)
+#define LDAC_E_INVALIDARG      ((LDAC_RESULT)0x80070057L)
+#define LDAC_E_FAIL            ((LDAC_RESULT)0x80004005L)
+#define LDAC_E_NOTIMPL         ((LDAC_RESULT)0x80004001L)
 
-#define LDAC_SUCCEEDED(result) ((LDAC_RESULT)(result)>=0)
-#define LDAC_FAILED(result)    ((LDAC_RESULT)(result)<0)
+#define LDAC_SUCCEEDED(result) ((LDAC_RESULT)(result) >= 0)
+#define LDAC_FAILED(result)    ((LDAC_RESULT)(result) < 0)
 
 #define DECLSPEC
 
-typedef struct _handle_ldac_struct *HANDLE_LDAC;
+typedef struct _handle_ldac_struct* HANDLE_LDAC;
 
 typedef enum {
-    LDAC_SMPL_FMT_NONE,
-    LDAC_SMPL_FMT_S08,
-    LDAC_SMPL_FMT_S16,
-    LDAC_SMPL_FMT_S24,
-    LDAC_SMPL_FMT_S32,
-    LDAC_SMPL_FMT_F32,
-    LDAC_SMPL_FMT_NUM,
-    LDAC_SMPL_FMT_MAX = 0x7fffffff
+  LDAC_SMPL_FMT_NONE,
+  LDAC_SMPL_FMT_S08,
+  LDAC_SMPL_FMT_S16,
+  LDAC_SMPL_FMT_S24,
+  LDAC_SMPL_FMT_S32,
+  LDAC_SMPL_FMT_F32,
+  LDAC_SMPL_FMT_NUM,
+  LDAC_SMPL_FMT_MAX = 0x7fffffff
 } LDAC_SMPL_FMT_T;
 
 /***************************************************************************************************
@@ -49,61 +49,53 @@ DECLSPEC int ldaclib_get_major_version(void);
 DECLSPEC int ldaclib_get_minor_version(void);
 DECLSPEC int ldaclib_get_branch_version(void);
 
-DECLSPEC LDAC_RESULT ldaclib_get_sampling_rate_index(int, int *);
-DECLSPEC LDAC_RESULT ldaclib_get_sampling_rate(int, int *);
-DECLSPEC LDAC_RESULT ldaclib_get_frame_samples(int, int *);
-DECLSPEC LDAC_RESULT ldaclib_get_nlnn(int, int *);
-DECLSPEC LDAC_RESULT ldaclib_get_channel(int, int *);
-DECLSPEC LDAC_RESULT ldaclib_get_channel_config_index(int, int *);
+DECLSPEC LDAC_RESULT ldaclib_get_sampling_rate_index(int, int*);
+DECLSPEC LDAC_RESULT ldaclib_get_sampling_rate(int, int*);
+DECLSPEC LDAC_RESULT ldaclib_get_frame_samples(int, int*);
+DECLSPEC LDAC_RESULT ldaclib_get_nlnn(int, int*);
+DECLSPEC LDAC_RESULT ldaclib_get_channel(int, int*);
+DECLSPEC LDAC_RESULT ldaclib_get_channel_config_index(int, int*);
 DECLSPEC LDAC_RESULT ldaclib_check_nlnn_shift(int, int);
 
 DECLSPEC HANDLE_LDAC ldaclib_get_handle(void);
 DECLSPEC LDAC_RESULT ldaclib_free_handle(HANDLE_LDAC);
 
 DECLSPEC LDAC_RESULT ldaclib_set_config_info(HANDLE_LDAC, int, int, int, int);
-DECLSPEC LDAC_RESULT ldaclib_get_config_info(HANDLE_LDAC, int *, int *, int *, int *);
-DECLSPEC LDAC_RESULT ldaclib_set_frame_header(HANDLE_LDAC, unsigned char *, int, int, int, int);
+DECLSPEC LDAC_RESULT ldaclib_get_config_info(HANDLE_LDAC, int*, int*, int*, int*);
+DECLSPEC LDAC_RESULT ldaclib_set_frame_header(HANDLE_LDAC, unsigned char*, int, int, int, int);
 
 /* Encoder API Functions */
-DECLSPEC LDAC_RESULT ldaclib_get_encode_setting(int, int, int *, int *, int *, int *, int *, int *, int *);
+DECLSPEC LDAC_RESULT ldaclib_get_encode_setting(int, int, int*, int*, int*, int*, int*, int*, int*);
 DECLSPEC LDAC_RESULT ldaclib_set_encode_frame_length(HANDLE_LDAC, int);
-DECLSPEC LDAC_RESULT ldaclib_get_encode_frame_length(HANDLE_LDAC, int *);
+DECLSPEC LDAC_RESULT ldaclib_get_encode_frame_length(HANDLE_LDAC, int*);
 DECLSPEC LDAC_RESULT ldaclib_set_encode_info(HANDLE_LDAC, int, int, int, int, int, int, int);
 DECLSPEC LDAC_RESULT ldaclib_init_encode(HANDLE_LDAC);
 DECLSPEC LDAC_RESULT ldaclib_free_encode(HANDLE_LDAC);
-DECLSPEC LDAC_RESULT ldaclib_encode(HANDLE_LDAC, char *[], LDAC_SMPL_FMT_T, unsigned char *, int *);
-DECLSPEC LDAC_RESULT ldaclib_flush_encode(HANDLE_LDAC, LDAC_SMPL_FMT_T, unsigned char *, int *);
-
+DECLSPEC LDAC_RESULT ldaclib_encode(HANDLE_LDAC, char*[], LDAC_SMPL_FMT_T, unsigned char*, int*);
+DECLSPEC LDAC_RESULT ldaclib_flush_encode(HANDLE_LDAC, LDAC_SMPL_FMT_T, unsigned char*, int*);
 
 /* Error Code Dispatch */
-DECLSPEC LDAC_RESULT ldaclib_get_error_code(HANDLE_LDAC, int *);
-DECLSPEC LDAC_RESULT ldaclib_get_internal_error_code(HANDLE_LDAC, int *);
+DECLSPEC LDAC_RESULT ldaclib_get_error_code(HANDLE_LDAC, int*);
+DECLSPEC LDAC_RESULT ldaclib_get_internal_error_code(HANDLE_LDAC, int*);
 DECLSPEC LDAC_RESULT ldaclib_clear_error_code(HANDLE_LDAC);
 DECLSPEC LDAC_RESULT ldaclib_clear_internal_error_code(HANDLE_LDAC);
 
-
-LDAC_RESULT ldaclib_get_frame_header(HANDLE_LDAC hData,
-                                     uint8_t *p_stream,
-                                     int *p_smplrate_id, int *p_chconfig_id,
-                                     int *p_frame_length, int *p_frame_status);
-LDAC_RESULT ldaclib_check_frame_header(HANDLE_LDAC hData, int smplrate_id,
-                                       int chconfig_id);
-LDAC_RESULT ldaclib_init_decode(HANDLE_LDAC hData, int nlnn_shift);
-LDAC_RESULT ldaclib_free_decode(HANDLE_LDAC hData);
-LDAC_RESULT ldaclib_decode(HANDLE_LDAC hData, uint8_t *p_stream,
-                           char **ap_pcm, int frame_length, int *p_nbytes_used,
-                           LDAC_SMPL_FMT_T sample_format);
+DECLSPEC LDAC_RESULT ldaclib_get_frame_header(HANDLE_LDAC, uint8_t*, int*, int*, int*, int*);
+DECLSPEC LDAC_RESULT ldaclib_check_frame_header(HANDLE_LDAC, int, int);
+DECLSPEC LDAC_RESULT ldaclib_init_decode(HANDLE_LDAC, int);
+DECLSPEC LDAC_RESULT ldaclib_free_decode(HANDLE_LDAC);
+DECLSPEC LDAC_RESULT ldaclib_decode(HANDLE_LDAC, uint8_t*, char**, int, int*, LDAC_SMPL_FMT_T);
 
 /***************************************************************************************************
     Error Code Definitions
 ***************************************************************************************************/
-#define LDAC_ERR_NONE                       0
+#define LDAC_ERR_NONE                     0
 
 /* Non Fatal Error */
-#define LDAC_ERR_NON_FATAL                  1
+#define LDAC_ERR_NON_FATAL                1
 
 /* Non Fatal Error (Block Level) */
-#define LDAC_ERR_BIT_ALLOCATION             5
+#define LDAC_ERR_BIT_ALLOCATION           5
 
 /* Non Fatal Error (Handle Level) */
 #define LDAC_ERR_NOT_IMPLEMENTED          128
@@ -162,11 +154,10 @@ LDAC_RESULT ldaclib_decode(HANDLE_LDAC hData, uint8_t *p_stream,
 #define LDAC_ERR_FRAME_LIMIT              998
 #define LDAC_ERR_TIME_EXPIRED             999
 
-#define LDAC_ERROR(err)       ((LDAC_ERR_NON_FATAL) <= (err) ? 1 : 0)
-#define LDAC_FATAL_ERROR(err) ((LDAC_ERR_FATAL) <= (err) ? 1 : 0)
+#define LDAC_ERROR(err)                   ((LDAC_ERR_NON_FATAL) <= (err) ? 1 : 0)
+#define LDAC_FATAL_ERROR(err)             ((LDAC_ERR_FATAL) <= (err) ? 1 : 0)
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 #endif /* _LDACLIB_H */
-

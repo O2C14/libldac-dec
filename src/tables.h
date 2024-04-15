@@ -1,13 +1,13 @@
 #ifndef LDAC_TABLES_H
 #define LDAC_TABLES_H
-extern const SCALAR *gaa_wcos_ldac[LDAC_NUMLNN];
-extern const int *gaa_rev_perm_ldac[2];
+extern const SCALAR* gaa_wcos_ldac[LDAC_NUMLNN];
+extern const int* gaa_rev_perm_ldac[2];
 extern const SCALAR ga_rsf_ldac[16];
 extern HCDEC ga_hcdec_sf0_ldac[4];
 extern HCDEC ga_hcdec_sf1_ldac[4];
 extern const int gaa_2dimdec_spec_ldac[8][2];
 extern const int gaa_4dimdec_spec_ldac[81][4];
-extern const SCALAR *gaa_bwin_ldac[2];
+extern const SCALAR* gaa_bwin_ldac[2];
 
 extern const unsigned int ga_smplrate_ldac[LDAC_NSUPSMPLRATEID];
 extern const unsigned short ga_framesmpls_ldac[LDAC_NSUPSMPLRATEID];
@@ -37,10 +37,10 @@ extern const HC sa_hc_sf1_blen4_ldac[16];
 extern const HC sa_hc_sf1_blen5_ldac[32];
 extern HCENC ga_hcenc_sf0_ldac[LDAC_MAXSFCBLEN_0 - LDAC_MINSFCBLEN_0 + 1];
 extern HCENC ga_hcenc_sf1_ldac[LDAC_MAXSFCBLEN_2 - LDAC_MINSFCBLEN_2 + 1];
-extern const SCALAR *gaa_fwin_ldac[LDAC_NUMLNN];
+extern const SCALAR* gaa_fwin_ldac[LDAC_NUMLNN];
 
-extern const SCALAR *gaa_wsin_ldac[LDAC_NUMLNN];
-extern const int *gaa_perm_ldac[LDAC_NUMLNN];
+extern const SCALAR* gaa_wsin_ldac[LDAC_NUMLNN];
+extern const int* gaa_perm_ldac[LDAC_NUMLNN];
 extern const SCALAR sa_fwin_1fs_ldac[LDAC_1FSLSU]; /* Q30 */
 extern const SCALAR sa_fwin_2fs_ldac[LDAC_2FSLSU]; /* Q30 */
 extern const SCALAR sa_wcos_1fs_ldac[LDAC_1FSLSU]; /* Q31 */
@@ -52,7 +52,7 @@ extern const int sa_perm_2fs_ldac[LDAC_2FSLSU];
 extern const SCALAR ga_sf_ldac[LDAC_NIDSF]; /* Q15 diff*/
 extern const SCALAR ga_isf_ldac[LDAC_NIDSF];
 extern const INT32 ga_qf_ldac[LDAC_NIDWL];   /* Q16 */
-extern const SCALAR ga_iqf_ldac[LDAC_NIDWL];  /* Q31 */
+extern const SCALAR ga_iqf_ldac[LDAC_NIDWL]; /* Q31 */
 extern const INT32 ga_irsf_ldac[LDAC_NIDWL]; /* Q15 */
 
 #endif
