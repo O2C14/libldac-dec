@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "struct_ldac.h"
 
@@ -14,8 +13,7 @@ extern "C" {
 #endif
 
 /* Function declaration */
-// #define DECLFUNC static
-#define DECLFUNC
+#define DECLFUNC// static
 
 /* Limit for alter EQMID process */
 #define LDACBT_LIMIT_ALTER_EQMID_PRIORITY LDACBT_EQMID_MQ

@@ -10,8 +10,7 @@
     Macro Definition
 ***************************************************************************************************/
 
-//#define DECLFUNC static
-#define DECLFUNC
+#define DECLFUNC// static
 #define UNUSED_ATTR __attribute__((unused))
 
 #ifndef PI

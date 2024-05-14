@@ -1,5 +1,6 @@
 #include "ldac.h"
 #include "ldaclib.h"
+#include <malloc.h>
 
 #define LDACLIB_MAJOR_VERSION  01
 #define LDACLIB_MINOR_VERSION  00
@@ -332,7 +333,7 @@ LDAC_RESULT ldaclib_init_decode(HANDLE_LDAC hData, int nlnn_shift) {
   unsigned int smplrate_id;
   LDAC_RESULT result;
   SFINFO* p_sfinfo;
-  int v6;
+  int nlnn;
 
   smplrate_id = hData->sfinfo.cfg.smplrate_id;
   if (smplrate_id > 3 || (unsigned int)(nlnn_shift + 2) > 4 ||
@@ -341,9 +342,9 @@ LDAC_RESULT ldaclib_init_decode(HANDLE_LDAC hData, int nlnn_shift) {
     return LDAC_E_FAIL;
   } else {
     p_sfinfo = &hData->sfinfo;
-    v6 = ga_ln_framesmpls_ldac[smplrate_id] + nlnn_shift;
-    hData->nlnn = v6;
-    set_imdct_table_ldac(v6);
+    nlnn = ga_ln_framesmpls_ldac[smplrate_id] + nlnn_shift;
+    hData->nlnn = nlnn;
+    set_imdct_table_ldac(nlnn);
     result = init_decode_ldac(p_sfinfo);
     if (result) {
       hData->error_code = LDAC_ERR_DEC_INIT_ALLOC;
@@ -365,16 +366,13 @@ LDAC_RESULT ldaclib_decode(
     int frame_length,
     int* p_nbytes_used,
     LDAC_SMPL_FMT_T sample_format) {
-  int v6;
   SFINFO* p_sfinfo;
-  int v10;
+  int error_code;
   int nlnn;
-  int v12;
   int loc;
 
-  v6 = hData->sfinfo.cfg.frame_length;
   loc = 0;
-  if (v6 > frame_length) {
+  if (hData->sfinfo.cfg.frame_length > frame_length) {
     hData->error_code = LDAC_ERR_INPUT_BUFFER_SIZE;
     return LDAC_E_FAIL;
   }
@@ -383,16 +381,15 @@ LDAC_RESULT ldaclib_decode(
     return LDAC_E_FAIL;
   } else {
     p_sfinfo = &hData->sfinfo;
-    v10 = unpack_raw_data_frame_ldac(&hData->sfinfo, p_stream, &loc, p_nbytes_used);
-    if (v10 <= 0) {
+    error_code = unpack_raw_data_frame_ldac(&hData->sfinfo, p_stream, &loc, p_nbytes_used);
+    if (error_code <= 0) {
       decode_ldac(p_sfinfo);
       proc_imdct_ldac(p_sfinfo, hData->nlnn);
       nlnn = hData->nlnn;
-      v12 = (unsigned int)(hData->sfinfo.error_code - 1) <= 0xFE;
       set_output_pcm_ldac(p_sfinfo, ap_pcm, sample_format, nlnn);
-      return v12;
+      return hData->sfinfo.error_code < LDAC_ERR_FATAL;
     }
-    hData->error_code = v10;
+    hData->error_code = error_code;
     return LDAC_E_FAIL;
   }
 }

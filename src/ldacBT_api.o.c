@@ -1,6 +1,8 @@
+#include <malloc.h>
+
 #include "ldacBT_internal.h"
-#define LDACBT_LIB_VER_MAJOR 2
-#define LDACBT_LIB_VER_MINOR 0
+#define LDACBT_LIB_VER_MAJOR  2
+#define LDACBT_LIB_VER_MINOR  0
 #define LDACBT_LIB_VER_BRANCH 33
 
 enum {
@@ -49,30 +51,25 @@ LDACBT_API int ldacBT_get_version() {
 }
 
 LDACBT_API void ldacBT_free_handle(HANDLE_LDAC_BT hLdacBT) {
-  struct _handle_ldac_struct* hLDAC;
-  HANDLE_LDAC_BT v2;
+  if (hLdacBT == NULL) return;
 
-  if (hLdacBT) {
-    hLDAC = hLdacBT->hLDAC;
-    if (hLdacBT->hLDAC) {
-      v2 = hLdacBT;
-      if (hLdacBT->proc_mode == LDACBT_PROCMODE_DECODE) {
-        ldaclib_free_decode(hLdacBT->hLDAC);
-        hLDAC = v2->hLDAC;
-      }
-      hLdacBT = (HANDLE_LDAC_BT)ldaclib_free_handle(hLDAC);
-      v2->hLDAC = 0;
+  if (hLdacBT->hLDAC != NULL) {
+    /* close ldaclib handle */
+    if (hLdacBT->proc_mode == LDACBT_PROCMODE_ENCODE) {
+      ldaclib_free_decode(hLdacBT->hLDAC);
     }
-    free(hLdacBT);
+    /* free ldaclib handle */
+    ldaclib_free_handle(hLdacBT->hLDAC);
+    hLdacBT->hLDAC = NULL;
   }
+  /* free ldacbt handle */
+  free(hLdacBT);
 }
 /* Get LDAC handle */
 LDACBT_API HANDLE_LDAC_BT ldacBT_get_handle(void) {
   HANDLE_LDAC_BT hLdacBT;
-  hLdacBT = (HANDLE_LDAC_BT)malloc(sizeof(struct _st_ldacbt_handle));
-  if (hLdacBT == NULL) {
-    return NULL;
-  }
+  hLdacBT = (HANDLE_LDAC_BT)malloc(sizeof(STRUCT_LDACBT_HANDLE));
+  if (hLdacBT == NULL) return NULL;
 
   //* Get ldaclib Handler
   if ((hLdacBT->hLDAC = ldaclib_get_handle()) == NULL) {
@@ -84,28 +81,26 @@ LDACBT_API HANDLE_LDAC_BT ldacBT_get_handle(void) {
   return hLdacBT;
 }
 LDACBT_API void ldacBT_close_handle(HANDLE_LDAC_BT hLdacBT) {
-  struct _handle_ldac_struct* hLDAC;
+  if (hLdacBT == NULL) return;
 
-  if (hLdacBT) {
-    hLDAC = hLdacBT->hLDAC;
-    if (hLDAC) {
-      if (hLdacBT->proc_mode == LDACBT_PROCMODE_DECODE) {
-        ldaclib_free_decode(hLDAC);
-        hLDAC = hLdacBT->hLDAC;
-      }
-      ldaclib_clear_error_code(hLDAC);
-      ldaclib_clear_internal_error_code(hLdacBT->hLDAC);
+  if (hLdacBT->hLDAC != NULL) {
+    /* close ldaclib handle */
+    if (hLdacBT->proc_mode == LDACBT_PROCMODE_ENCODE) {
+      ldaclib_free_decode(hLdacBT->hLDAC);
     }
-    ldacBT_param_clear(hLdacBT);
+    /* clear error code */
+    ldaclib_clear_error_code(hLdacBT->hLDAC);
+    ldaclib_clear_internal_error_code(hLdacBT->hLDAC);
   }
+  /* clear ldacbt handle */
+  ldacBT_param_clear(hLdacBT);
 }
 
 /* Get ERROR CODE */
 LDACBT_API int ldacBT_get_error_code(HANDLE_LDAC_BT hLdacBT) {
   int error_code;
-  if (hLdacBT == NULL) {
-    return LDACBT_ERR_FATAL_HANDLE << 10;
-  }
+  if (hLdacBT == NULL) return LDACBT_ERR_FATAL_HANDLE << 10;
+
   ldacBT_check_ldaclib_error_code(hLdacBT);
   if (hLdacBT->error_code_api == LDACBT_GET_LDACLIB_ERROR_CODE) {
     error_code = LDACBT_ERR_FATAL << 20 | hLdacBT->error_code;

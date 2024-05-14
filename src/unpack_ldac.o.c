@@ -75,11 +75,11 @@ DECLFUNC int unpack_raw_data_frame_ldac(
   HCDEC* p_hcsf;
   int sfc_mode;
   int nqus, nchs, nsps;
-  int ich, ibk, iqu, isp, i, j;
+  int ich, ibk, iqu, isp;
   AB* p_ab;
   AC* p_ac;
   int ext_size;
-  int p_idata[11];
+  int p_idata;
   int nbytes_frame = p_sfinfo->cfg.frame_length;
   char nbks = gaa_block_setting_ldac[p_sfinfo->cfg.chconfig_id][1];
   if (nbks > 0) {
@@ -102,7 +102,7 @@ DECLFUNC int unpack_raw_data_frame_ldac(
             read_unpack_ldac(7, p_stream, p_loc, &p_ac->ext_size);
             if (p_ac->ext_size > 0) {
               for (ext_size = p_ac->ext_size; ext_size > 0; ext_size -= 16)
-                read_unpack_ldac(16, p_stream, p_loc, p_idata);
+                read_unpack_ldac(16, p_stream, p_loc, &p_idata);
             }
           }
         }
@@ -156,16 +156,16 @@ DECLFUNC int unpack_raw_data_frame_ldac(
               p_ac->sfc_bitlen += 2;
 
               if (p_ac->p_ab->nqus > 0) {
-                for (j = 0; j != p_ac->p_ab->nqus; ++j) {
-                  read_unpack_ldac(p_hcsf->maxlen, p_stream, p_loc, p_idata);
-                  int v88 = p_hcsf->p_dec[p_idata[0]];
-                  char v89 = v88 & 0x1F;
-                  *p_loc -= p_hcsf->maxlen - p_hcsf->p_tbl[v88].len;
+                for (iqu = 0; iqu != p_ac->p_ab->nqus; ++iqu) {
+                  read_unpack_ldac(p_hcsf->maxlen, p_stream, p_loc, &p_idata);
+                  int dif = p_hcsf->p_dec[p_idata];
+                  char v89 = dif & 0x1F;
+                  *p_loc -= p_hcsf->maxlen - p_hcsf->p_tbl[dif].len;
                   sfc_bitlen = p_ac->sfc_bitlen;
-                  int v91 = v88 >> (sfc_bitlen - 1);
-                  v88 = v88 | (-1 << sfc_bitlen);
-                  if ((v91 & 1) != 0) v89 = v88 & 0x1F;
-                  p_ac->a_idsf[j] = ((unsigned char)p_ac->p_ab->ap_ac[0]->a_idsf[j] + v89) & 0x1F;
+                  int v91 = dif >> (sfc_bitlen - 1);
+                  dif = dif | (-1 << sfc_bitlen);
+                  if ((v91 & 1) != 0) v89 = dif & 0x1F;
+                  p_ac->a_idsf[iqu] = ((unsigned char)p_ac->p_ab->ap_ac[0]->a_idsf[iqu] + v89) & 0x1F;
                 }
               }
             } else if (!unpack_scale_factor_0_ldac(p_ac, p_stream, p_loc)) {
@@ -194,8 +194,8 @@ DECLFUNC int unpack_raw_data_frame_ldac(
           } else if (!unpack_scale_factor_0_ldac(p_ac, p_stream, p_loc)) {
             return LDAC_ERR_UNPACK_BLOCK_FAILED;
           }
-          for (i = 0; i < LDAC_MAXNQUS; ++i) {
-            if (p_ac->a_idsf[i] > 31) {
+          for (iqu = 0; iqu < LDAC_MAXNQUS; ++iqu) {
+            if (p_ac->a_idsf[iqu] > 31) {
               *p_ac->p_ab->p_error_code = LDAC_ERR_SYNTAX_IDSF;
               return LDAC_ERR_UNPACK_BLOCK_FAILED;
             }
@@ -213,23 +213,21 @@ DECLFUNC int unpack_raw_data_frame_ldac(
               if (idwl1 == 1) {
                 nsps = ga_nsps_ldac[iqu];
                 if (nsps == 2) {
-                  read_unpack_ldac(LDAC_2DIMSPECBITS, p_stream, p_loc, &val);
-                  p_idata[0] = val;
-                  p_ac->a_qspec[lsp] = gaa_2dimdec_spec_ldac[val][0];
-                  p_ac->a_qspec[lsp + 1] = gaa_2dimdec_spec_ldac[val][1];
+                  read_unpack_ldac(LDAC_2DIMSPECBITS, p_stream, p_loc, &p_idata);
+                  p_ac->a_qspec[lsp] = gaa_2dimdec_spec_ldac[p_idata][0];
+                  p_ac->a_qspec[lsp + 1] = gaa_2dimdec_spec_ldac[p_idata][1];
                 } else if (nsps >> 2) {
                   for (isp = 0; isp < 4 * (nsps >> 2); isp += 4) {
-                    read_unpack_ldac(LDAC_4DIMSPECBITS, p_stream, p_loc, &val);
-                    if (val > 80) {
+                    read_unpack_ldac(LDAC_4DIMSPECBITS, p_stream, p_loc, &p_idata);
+                    if (p_idata > 80) {
                       *p_ac->p_ab->p_error_code = LDAC_ERR_SYNTAX_SPEC;
                       return LDAC_ERR_UNPACK_BLOCK_FAILED;
                     }
-                    p_ac->a_qspec[isp + 0 + lsp] = gaa_4dimdec_spec_ldac[val][0];
-                    p_ac->a_qspec[isp + 1 + lsp] = gaa_4dimdec_spec_ldac[val][1];
-                    p_ac->a_qspec[isp + 2 + lsp] = gaa_4dimdec_spec_ldac[val][2];
-                    p_ac->a_qspec[isp + 3 + lsp] = gaa_4dimdec_spec_ldac[val][3];
+                    p_ac->a_qspec[isp + 0 + lsp] = gaa_4dimdec_spec_ldac[p_idata][0];
+                    p_ac->a_qspec[isp + 1 + lsp] = gaa_4dimdec_spec_ldac[p_idata][1];
+                    p_ac->a_qspec[isp + 2 + lsp] = gaa_4dimdec_spec_ldac[p_idata][2];
+                    p_ac->a_qspec[isp + 3 + lsp] = gaa_4dimdec_spec_ldac[p_idata][3];
                   }
-                  p_idata[0] = val;
                 }
               } else {
                 wl = ga_wl_ldac[idwl1];
@@ -237,10 +235,10 @@ DECLFUNC int unpack_raw_data_frame_ldac(
                 int v41;
                 v38 = 1 << (wl - 1);
                 for (isp = lsp; hsp != isp; ++isp) {
-                  read_unpack_ldac(wl, p_stream, p_loc, p_idata);
-                  v41 = p_idata[0];
-                  if ((v38 & p_idata[0]) != 0) {
-                    v41 = (-1 << wl) | p_idata[0];
+                  read_unpack_ldac(wl, p_stream, p_loc, &p_idata);
+                  v41 = p_idata;
+                  if ((v38 & p_idata) != 0) {
+                    v41 = (-1 << wl) | p_idata;
                   }
                   p_ac->a_qspec[isp] = v41;
                 }
@@ -257,9 +255,9 @@ DECLFUNC int unpack_raw_data_frame_ldac(
                 hsp = ga_isp_ldac[iqu + 1];
                 wl = ga_wl_ldac[idwl2];
                 for (isp = lsp; hsp != isp; ++isp) {
-                  read_unpack_ldac(wl, p_stream, p_loc, p_idata);
-                  int v49 = p_idata[0];
-                  if (((p_idata[0] >> (wl - 1)) & 1) != 0) v49 = p_idata[0] | (-1 << wl);
+                  read_unpack_ldac(wl, p_stream, p_loc, &p_idata);
+                  int v49 = p_idata;
+                  if (((p_idata >> (wl - 1)) & 1) != 0) v49 = p_idata | (-1 << wl);
                   p_ac->a_rspec[isp] = v49;
                 }
               }
@@ -272,14 +270,14 @@ DECLFUNC int unpack_raw_data_frame_ldac(
       nbits_padding = ((*p_loc + LDAC_BYTESIZE - 1) / LDAC_BYTESIZE) * LDAC_BYTESIZE - *p_loc;
 
       if (nbits_padding > 0) {
-        read_unpack_ldac(nbits_padding, p_stream, p_loc, p_idata);
-        if (p_idata[0]) return LDAC_ERR_UNPACK_BLOCK_ALIGN;
+        read_unpack_ldac(nbits_padding, p_stream, p_loc, &p_idata);
+        if (p_idata) return LDAC_ERR_UNPACK_BLOCK_ALIGN;
       }
     }
   }
   nbytes_filled = nbytes_frame - *p_loc / LDAC_BYTESIZE;
 
-  for (i = 0; i < nbytes_filled; i++) {
+  for (iqu = 0; iqu < nbytes_filled; iqu++) {
     read_unpack_ldac(LDAC_BYTESIZE, p_stream, p_loc, &FILLCODE);
     if (FILLCODE != LDAC_FILLCODE) return LDAC_ERR_UNPACK_FRAME_ALIGN;
   }

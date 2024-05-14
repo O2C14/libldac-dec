@@ -2,12 +2,22 @@ cmake_minimum_required(VERSION 3.15)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror=implicit-function-declaration")
 
+include_directories(
+    ./inc
+)
+file(GLOB_RECURSE SRC_DIR_LIST_dec "./src/*.c")
+add_library(
+    ldac_dec_lib STATIC
+    ${SRC_DIR_LIST_dec}
+)
+option(Only_compile_decoder "Only compile decoder" ON)
+if(NOT Only_compile_decoder)
 set(lib_enc_dic ../encode/libldac)#from aosp
 
 set(libldac ${lib_enc_dic})
 include_directories(
     ${libldac}/inc
-)'
+)
 
 set(enc_dic ${libldac}/src)
 
@@ -33,14 +43,7 @@ add_library(
     ${enc_dic}/tables_sigproc_ldac.c
 )
 
-include_directories(
-    ./inc
-)
-file(GLOB_RECURSE SRC_DIR_LIST_dec "./src/*.c")
-add_library(
-    ldac_dec_lib STATIC
-    ${SRC_DIR_LIST_dec}
-)
+
 add_executable(ldac_encoder ldac_enc_test.c)
 add_executable(ldac_decoder ldac_dec_test.c)
 add_executable(auto_test auto_test.c)
@@ -48,4 +51,4 @@ add_executable(auto_test auto_test.c)
 
 target_link_libraries(ldac_encoder ldac_enc_lib)
 target_link_libraries(ldac_decoder ldac_dec_lib)
-
+endif()

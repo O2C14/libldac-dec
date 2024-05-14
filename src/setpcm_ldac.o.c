@@ -18,7 +18,7 @@ DECLFUNC void set_output_pcm_ldac(
           temp = (int)(floor((double)(((double)p_time[isp]) + 0.5)));
           if (temp < -0x8000) temp = -0x8000;
           if (temp >= 0x7FFF) temp = 0x7FFF;
-          p_pcm[isp] = temp;
+          p_pcm[isp] = *(short*)(&temp);
         }
       }
       break;

@@ -152,17 +152,10 @@ struct _config_info_ldac {
 };
 
 /* Audio Channel (AC) Sub Structure */
-#ifndef _32BIT_FIXED_POINT
 struct _audio_channel_sub_ldac {
   SCALAR a_time[LDAC_MAXLSU * LDAC_NFRAME];
   SCALAR a_spec[LDAC_MAXLSU];
 };
-#else  /* _32BIT_FIXED_POINT */
-struct _audio_channel_sub_ldac {
-  INT32 a_time[LDAC_MAXLSU * LDAC_NFRAME];
-  INT32 a_spec[LDAC_MAXLSU];
-};
-#endif /* _32BIT_FIXED_POINT */
 
 /* Audio Channel (AC) Structure */
 struct _audio_channel_ldac {
@@ -241,14 +234,6 @@ typedef struct {
   unsigned char len;
 } HC;
 
-/* Huffman Encoding Structure */
-typedef struct _hcenc_ldac HCENC;
-struct _hcenc_ldac {
-  const HC* p_tbl;
-  unsigned char ncodes;
-  unsigned char wl;
-  unsigned char mask;
-};
 typedef struct _hcdec_ldac HCDEC;
 struct _hcdec_ldac {
   const HC* p_tbl;
