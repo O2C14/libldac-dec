@@ -243,6 +243,14 @@ struct _hcdec_ldac {
   unsigned char maxlen;
   const unsigned char* p_dec;
 };
+/* Huffman Encoding Structure */
+typedef struct _hcenc_ldac HCENC;
+struct _hcenc_ldac {
+    const HC *p_tbl;
+    unsigned char ncodes;
+    unsigned char wl;
+    unsigned char mask;
+};
 /*******************************************************************************
     Function Declarations
 *******************************************************************************/
@@ -259,5 +267,4 @@ struct _hcdec_ldac {
   (((bs) & (0x1 << ((nbits)-1))) ? ((bs) | ((~0x0) << (nbits))) : bs)
 
 #include "proto_ldac.h"
-#include "tables.h"
 #endif /* _LDAC_H */

@@ -7,7 +7,10 @@ int main()
 
   DIR *dir;
   struct dirent *ent;
-
+#if  __WIN32
+  unsigned __int64 t0 = *(
+      unsigned __int64 *)(0x7FFE0000 + 0x8); // like QueryUnbiasedInterruptTime
+#endif
   if ((dir = opendir("../")) != NULL)
   {
     // 打开当前目录
@@ -66,6 +69,10 @@ int main()
   {
     perror("");
   }
-
+#if  __WIN32
+  unsigned __int64 t = *(unsigned __int64 *)(0x7FFE0000 + 0x8) - t0;
+  printf("used %lfs\n", ((double)t) / 10000000.0);
+#endif
+  system("pause");
   return 0;
 }

@@ -7,44 +7,43 @@
 
 #include "struct_ldac.h"
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Function declaration */
-#define DECLFUNC// static
+#define DECLFUNC                          static
 
 /* Limit for alter EQMID process */
 #define LDACBT_LIMIT_ALTER_EQMID_PRIORITY LDACBT_EQMID_MQ
 
 #include "ldacBT.h"
+#include "ldacBT_ex.h"
 #include "ldaclib.h"
-
 
 /* macro value */
 /* The size of LDAC transport header. Unit:Byte. */
-#define LDACBT_FRMHDRBYTES LDAC_FRMHDRBYTES
+#define LDACBT_FRMHDRBYTES       LDAC_FRMHDRBYTES
 /* The Maximum number of frames that can transrate in one packet.(LDAC A2DP spec) */
-#define LDACBT_NFRM_TX_MAX 15
+#define LDACBT_NFRM_TX_MAX       15
 /* Lowest Common Multiple of (2,3,4)Bytes * 2ch * 256samples */
-#define LDACBT_ENC_PCM_BUF_SZ 6144
+#define LDACBT_ENC_PCM_BUF_SZ    6144
 /* The maximum pcm word length allowed. Unit:Byte */
-#define LDACBT_PCM_WLEN_MAX 4
+#define LDACBT_PCM_WLEN_MAX      4
 /* The size of LDACBT_TRANSPORT_FRM_BUF's buffer. Unit:Byte  */
 #define LDACBT_ENC_STREAM_BUF_SZ 1024
 /* The size of rtp header and so on. Unit:Byte */
 /*  = sizeof(struct rtp_header) + sizeof(struct rtp_payload) + 1 (scms-t). */
-#define LDACBT_TX_HEADER_SIZE 18
+#define LDACBT_TX_HEADER_SIZE    18
 /* The MTU size required for LDAC A2DP streaming. */
-#define LDACBT_MTU_REQUIRED 679
-#define LDACBT_MTU_3DH5 (990 + LDACBT_TX_HEADER_SIZE)
+#define LDACBT_MTU_REQUIRED      679
+#define LDACBT_MTU_3DH5          (990 + LDACBT_TX_HEADER_SIZE)
 
 /* The state for alter operation */
-#define LDACBT_ALTER_OP__NON 0
-#define LDACBT_ALTER_OP__ACTIVE 1
+#define LDACBT_ALTER_OP__NON     0
+#define LDACBT_ALTER_OP__ACTIVE  1
 #define LDACBT_ALTER_OP__STANDBY 2
-#define LDACBT_ALTER_OP__FLASH 9
+#define LDACBT_ALTER_OP__FLASH   9
 
 /* other */
 #ifndef LDACBT_S_OK
@@ -158,9 +157,14 @@ typedef struct _st_ldacbt_handle {
   int tgt_frmlen;      /* target frame length */
   int stat_alter_op;   /* status of alter operation */
 
-  int cm;                 /* Channel Mode */
-  int cci;                /* Channel Config Index */
-  int transport;          /* Transport Stream ( with frame header) */
+  int cm;        /* Channel Mode */
+  int cci;       /* Channel Config Index */
+  int transport; /* Transport Stream ( with frame header) */
+  /* buffer for "ldac_transport_frame" sequence */
+  LDACBT_TRANSPORT_FRM_BUF ldac_trns_frm_buf;
+  /* buffer for input pcm */
+  LDACBT_PCM_RING_BUF pcmring;
+
   int flg_decode_inited;  // add
   /* work buffer for LDACLIB I/O */
   char** pp_pcm;
@@ -175,11 +179,21 @@ DECLFUNC int ldacBT_assert_cm(int cm);
 DECLFUNC int ldacBT_assert_cci(int cci);
 DECLFUNC int ldacBT_assert_sample_format(LDACBT_SMPL_FMT_T fmt);
 DECLFUNC int ldacBT_assert_pcm_sampling_freq(int sf);
+DECLFUNC int ldacBT_assert_mtu(int mtu);
+DECLFUNC int ldacBT_assert_eqmid(int eqmid);
+DECLFUNC void ldacBT_set_eqmid_core(HANDLE_LDAC_BT hLdacBT, int eqmid);
+DECLFUNC void ldacBT_prepare_pcm_encode(
+    void* pbuff, char** ap_pcm, int nsmpl, int nch, LDACBT_SMPL_FMT_T fmt);
 DECLFUNC int ldacBT_interleave_pcm(
     unsigned char* p_pcm, const char** pp_pcm, int nsmpl, int nch, LDACBT_SMPL_FMT_T fmt);
+DECLFUNC int ldacBT_frmlen_to_bitrate(int frmlen, int flgFrmHdr, int sf, int frame_samples);
 DECLFUNC int ldacBT_cm_to_cci(int cm);
 DECLFUNC int ldacBT_cci_to_cm(int cci);
-
+DECLFUNC int ldacBT_get_altered_eqmid(HANDLE_LDAC_BT hLdacBT, int priority);
+DECLFUNC int ldacBT_get_eqmid_from_frmlen(int frmlen, int nch, int flgFrmHdr, int pktType);
+DECLFUNC int ldacBT_update_frmlen(HANDLE_LDAC_BT hLdacBT, int frmlen);
+DECLFUNC P_LDACBT_EQMID_PROPERTY ldacBT_get_eqmid_conv_tbl(int ldac_bt_mode);
+DECLFUNC P_LDACBT_CONFIG ldacBT_get_config(int ldac_bt_mode, int pkt_type);
 #ifdef __cplusplus
 }
 #endif

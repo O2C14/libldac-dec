@@ -80,6 +80,7 @@ DECLSPEC LDAC_RESULT ldaclib_get_internal_error_code(HANDLE_LDAC, int*);
 DECLSPEC LDAC_RESULT ldaclib_clear_error_code(HANDLE_LDAC);
 DECLSPEC LDAC_RESULT ldaclib_clear_internal_error_code(HANDLE_LDAC);
 
+/* Decoder API Functions */
 DECLSPEC LDAC_RESULT ldaclib_get_frame_header(HANDLE_LDAC, uint8_t*, int*, int*, int*, int*);
 DECLSPEC LDAC_RESULT ldaclib_check_frame_header(HANDLE_LDAC, int, int);
 DECLSPEC LDAC_RESULT ldaclib_init_decode(HANDLE_LDAC, int);
