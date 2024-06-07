@@ -10,7 +10,7 @@
     Macro Definition
 ***************************************************************************************************/
 
-#define DECLFUNC// static
+#define DECLFUNC static
 #define UNUSED_ATTR __attribute__((unused))
 
 #ifndef PI
@@ -30,12 +30,16 @@ typedef short          INT16;
 typedef int            INT32;
 typedef unsigned int  UINT32;
 typedef long long      INT64;
-
+#if CONFIG_SCALAR_F64
+typedef double        SCALAR;
+#define _scalar(x)         x
+#else
 typedef float         SCALAR;
+#define _scalar(x)       x##f
+#endif
 
-//typedef double        SCALAR;
 
-#define _scalar(x) x##f
+
 typedef union {
     float f;
     int i;

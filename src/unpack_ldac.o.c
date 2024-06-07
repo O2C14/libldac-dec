@@ -1,5 +1,4 @@
 #include "ldac.h"
-#include "tables.h"
 static void read_unpack_ldac(int nbits, STREAM* p_block, int* p_loc, int* p_idata) {
   STREAM* p_bufptr;
   register int bpos;

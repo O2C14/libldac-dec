@@ -2,45 +2,44 @@ cmake_minimum_required(VERSION 3.15)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror=implicit-function-declaration")
 
+
+option(Only_compile_decoder "Only compile decoder" ON)
+option(Used_CSI_DSP "Used CSI DSP" OFF)
+option(Used_double "Used double" OFF)
+
 include_directories(
     ./inc
 )
-file(GLOB_RECURSE SRC_DIR_LIST_dec "./src/*.c")
+set(LDAC_SRC_DIC ./src)
 add_library(
     ldac_dec_lib STATIC
-    ${SRC_DIR_LIST_dec}
+    ${LDAC_SRC_DIC}/ldacBT.c
+    ${LDAC_SRC_DIC}/ldaclib.c
 )
-option(Only_compile_decoder "Only compile decoder" ON)
+
+if(Used_CSI_DSP)
+add_definitions(-DCONFIG_USED_CSI_DSP)
+endif()
+
+if(Used_double)
+add_definitions(-DCONFIG_SCALAR_F64)
+endif()
+
 if(NOT Only_compile_decoder)
 set(lib_enc_dic ../encode/libldac)#from aosp
 
-set(libldac ${lib_enc_dic})
+
+set(libldac_enc ${lib_enc_dic})
 include_directories(
-    ${libldac}/inc
+    ${libldac_enc}/inc
 )
 
-set(enc_dic ${libldac}/src)
+set(enc_dic ${libldac_enc}/src)
 
 add_library(
     ldac_enc_lib STATIC
-
-    ${enc_dic}/bitalloc_ldac.c
-    ${enc_dic}/bitalloc_sub_ldac.c
-    ${enc_dic}/encode_ldac.c
     ${enc_dic}/ldacBT.c
-    ${enc_dic}/ldacBT_api.c
-    ${enc_dic}/ldacBT_internal.c
     ${enc_dic}/ldaclib.c
-    ${enc_dic}/ldaclib_api.c
-    ${enc_dic}/memory_ldac.c
-    ${enc_dic}/pack_ldac.c
-    ${enc_dic}/tables_ldac.c
-    
-    ${enc_dic}/mdct_ldac.c
-    ${enc_dic}/quant_ldac.c
-    ${enc_dic}/setpcm_ldac.c
-    ${enc_dic}/sigana_ldac.c
-    ${enc_dic}/tables_sigproc_ldac.c
 )
 
 

@@ -15,7 +15,7 @@ DECLFUNC void set_output_pcm_ldac(
         short* p_pcm = pp_pcm[ich];
         int temp;
         for (int isp = 0; isp < nsmpl; isp++) {
-          temp = (int)(floor((double)(((double)p_time[isp]) + 0.5)));
+          temp = (int)(floor(p_time[isp] + _scalar(0.5)));
           if (temp < -0x8000) temp = -0x8000;
           if (temp >= 0x7FFF) temp = 0x7FFF;
           p_pcm[isp] = *(short*)(&temp);
@@ -28,7 +28,7 @@ DECLFUNC void set_output_pcm_ldac(
         char* p_pcm = pp_pcm[ich];
         int temp;
         for (int isp = 0; isp < nsmpl; isp++) {
-          temp = (int)(floor((double)(((double)p_time[isp]) * 256.0 + 0.5)));
+          temp = (int)(floor(p_time[isp] * _scalar(256.0) + _scalar(0.5)));
           if (temp < -0x800000) temp = -0x800000;
           if (temp >= 0x7FFFFF) temp = 0x7FFFFF;
           p_pcm[(isp * 3) + 0] = ((char*)(&temp))[0];
@@ -43,7 +43,7 @@ DECLFUNC void set_output_pcm_ldac(
         int* p_pcm = pp_pcm[ich];
         long long temp;
         for (int isp = 0; isp < nsmpl; isp++) {
-          temp = (long long)(floor((double)(((double)p_time[isp]) * 65536.0 + 0.5)));
+          temp = (long long)(floor(p_time[isp] * _scalar(65536.0) + _scalar(0.5)));
           if (temp < -0x80000000LL) temp = -0x80000000LL;
           if (temp >= 0x7FFFFFFFLL) temp = 0x7FFFFFFFLL;
           p_pcm[isp] = *(int*)(&temp);
@@ -56,7 +56,7 @@ DECLFUNC void set_output_pcm_ldac(
         float* p_pcm = pp_pcm[ich];
         float temp;
         for (int isp = 0; isp < nsmpl; isp++) {
-          temp = p_time[isp] * 0.000030518;
+          temp = p_time[isp] * (_scalar(1.0)/_scalar(32768.0));
           if (temp < -1.0) temp = -1.0;
           if (temp >= 1.0) temp = 1.0;
           p_pcm[isp] = temp;

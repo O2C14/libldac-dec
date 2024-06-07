@@ -268,6 +268,7 @@ int main(int argc, char *argv[]) {
     npack += 1;
   }
   if (result != 0) {
+    printf("%s\r\n",get_error_code_string(ldacBT_get_error_code(ldacBT_dec_handle)));
     printf("Error generated in the %dth stage of decoding\r\n", result);
     printf("error\r\n");
   }
@@ -276,8 +277,7 @@ int main(int argc, char *argv[]) {
   printf("used %lfs,%lfus per pack\n", ((double)t) / 10000000.0,
          ((double)t / (double)npack) / 10.0);
 #endif
-  printf("%s\r\n",
-         get_error_code_string(ldacBT_get_error_code(ldacBT_dec_handle)));
+
 
   free(pStream);
   ldacBT_close_handle(ldacBT_dec_handle);

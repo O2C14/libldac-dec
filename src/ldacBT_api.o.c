@@ -55,7 +55,7 @@ LDACBT_API void ldacBT_free_handle(HANDLE_LDAC_BT hLdacBT) {
 
   if (hLdacBT->hLDAC != NULL) {
     /* close ldaclib handle */
-    if (hLdacBT->proc_mode == LDACBT_PROCMODE_ENCODE) {
+    if (hLdacBT->proc_mode == LDACBT_PROCMODE_DECODE) {
       ldaclib_free_decode(hLdacBT->hLDAC);
     }
     /* free ldaclib handle */
@@ -85,7 +85,7 @@ LDACBT_API void ldacBT_close_handle(HANDLE_LDAC_BT hLdacBT) {
 
   if (hLdacBT->hLDAC != NULL) {
     /* close ldaclib handle */
-    if (hLdacBT->proc_mode == LDACBT_PROCMODE_ENCODE) {
+    if (hLdacBT->proc_mode == LDACBT_PROCMODE_DECODE) {
       ldaclib_free_decode(hLdacBT->hLDAC);
     }
     /* clear error code */

@@ -259,5 +259,4 @@ struct _hcdec_ldac {
   (((bs) & (0x1 << ((nbits)-1))) ? ((bs) | ((~0x0) << (nbits))) : bs)
 
 #include "proto_ldac.h"
-#include "tables.h"
 #endif /* _LDAC_H */

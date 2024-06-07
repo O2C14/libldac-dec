@@ -4,6 +4,7 @@ static void proc_imdct_core_ldac(SCALAR* p_y, SCALAR* p_x, int nlnn) {
   int loop1, loop2;
   int coef, index0, index1, offset;
   const int nsmpl = npow2_ldac(nlnn);
+  const int nsmpl_half = nsmpl >> 1;
   const int* p_rp;
   const SCALAR *p_w, *p_c, *p_s;
   SCALAR a_work[LDAC_MAXLSU];
@@ -12,6 +13,7 @@ static void proc_imdct_core_ldac(SCALAR* p_y, SCALAR* p_x, int nlnn) {
 
   i = nlnn - LDAC_1FSLNN;
   p_w = gaa_bwin_ldac[i];
+#if !(CONFIG_USED_CSI_DSP)
   p_c = gaa_wcos_ldac[i];
   p_s = gaa_wsin_ldac[i];
   p_rp = gaa_rev_perm_ldac[i];
@@ -68,24 +70,25 @@ static void proc_imdct_core_ldac(SCALAR* p_y, SCALAR* p_x, int nlnn) {
       index1 += 2 - nsmpl;
     }
   }
-  const int nsmpl_half = nsmpl >> 1;
-  if (nsmpl_half > 0) {
-    i = 0;
-    do {
-      p_y[2 * i] = p_s[coef + i] * a_work[2 * i + 1] + p_c[coef + i] * a_work[2 * i];
-      p_y[nsmpl - 2 * i - 1] = p_s[coef + i] * a_work[2 * i] - a_work[2 * i + 1] * p_c[coef + i];
-      i++;
-    } while (nsmpl_half != i);
-    i = 0;
-    do {
-      p_x[i] = p_y[nsmpl_half + i] * p_w[i] - p_w[nsmpl - 1 - i] * p_x[nsmpl + i];
-      p_x[nsmpl_half + i] = -p_w[nsmpl_half - 1 - i] * p_x[nsmpl + nsmpl_half + i] -
-                            p_y[nsmpl - 1 - i] * p_w[nsmpl_half + i];
-      p_x[nsmpl + i] = p_y[nsmpl_half - 1 - i];
-      p_x[nsmpl + nsmpl_half + i] = p_y[i];
-      i++;
-    } while (nsmpl_half != i);
-  }
+
+  i = 0;
+  do {
+    p_y[2 * i] = p_s[coef + i] * a_work[2 * i + 1] + p_c[coef + i] * a_work[2 * i];
+    p_y[nsmpl - 2 * i - 1] = p_s[coef + i] * a_work[2 * i] - a_work[2 * i + 1] * p_c[coef + i];
+    i++;
+  } while (nsmpl_half != i);
+#else
+  csi_dct4_f32(&dct4f32, a_work, p_y);
+#endif
+  i = 0;
+  do {
+    p_x[i] = p_y[nsmpl_half + i] * p_w[i] - p_w[nsmpl - 1 - i] * p_x[nsmpl + i];
+    p_x[nsmpl_half + i] = -p_w[nsmpl_half - 1 - i] * p_x[nsmpl + nsmpl_half + i] -
+                          p_y[nsmpl - 1 - i] * p_w[nsmpl_half + i];
+    p_x[nsmpl + i] = p_y[nsmpl_half - 1 - i];
+    p_x[nsmpl + nsmpl_half + i] = p_y[i];
+    i++;
+  } while (nsmpl_half != i);
 }
 
 DECLFUNC void proc_imdct_ldac(SFINFO* p_sfinfo, int nlnn) {

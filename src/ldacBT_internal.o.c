@@ -34,7 +34,7 @@ DECLFUNC void ldacBT_param_clear(HANDLE_LDAC_BT hLdacBT) {
   hLdacBT->ap_pcm[0] = &hLdacBT->a_pcm[0];
   hLdacBT->ap_pcm[1] = &hLdacBT->a_pcm[LDACBT_MAX_LSU * LDACBT_PCM_WLEN_MAX];
   hLdacBT->pp_pcm = hLdacBT->ap_pcm;
-  clear_data_ldac(hLdacBT->a_pcm, sizeof(hLdacBT->a_pcm));
+  clear_data_ldac(hLdacBT->a_pcm, LDAC_PRCNCH * LDACBT_MAX_LSU * LDACBT_PCM_WLEN_MAX);
 }
 
 /* get ldaclib error code */
