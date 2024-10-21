@@ -24,6 +24,6 @@ DECLFUNC void* calloc_ldac(SFINFO* p_sfinfo, size_t nmemb, size_t size) {
     p_sfinfo->p_mempos = &p_mempos[nmemb * align_ldac(size)];
     return p_mempos;
   } else {
-    return malloc(nmemb * size);
+    return calloc(nmemb, size);
   }
 }
