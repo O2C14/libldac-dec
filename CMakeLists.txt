@@ -17,6 +17,14 @@ add_library(
     ${LDAC_SRC_DIC}/ldaclib.c
 )
 
+add_library(
+    ldacBT_dec SHARED
+    ${LDAC_SRC_DIC}/ldacBT.c
+    ${LDAC_SRC_DIC}/ldaclib.c
+)
+
+target_link_libraries(ldacBT_dec m)
+
 if(Used_CSI_DSP)
 add_definitions(-DCONFIG_USED_CSI_DSP)
 endif()
