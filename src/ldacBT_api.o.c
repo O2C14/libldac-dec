@@ -272,7 +272,7 @@ LDACBT_API int ldacBT_decode(
   if (LDAC_FAILED(ldaclib_decode(
           hLdacBT->hLDAC,
           p_bs + LDACBT_FRMHDRBYTES,
-          hLdacBT->pp_pcm,
+          (void **) hLdacBT->pp_pcm,
           bs_bytes - LDACBT_FRMHDRBYTES,
           used_bytes,
           fmt))) {

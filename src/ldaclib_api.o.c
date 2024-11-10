@@ -362,7 +362,7 @@ LDAC_RESULT ldaclib_free_decode(HANDLE_LDAC hData) {
 LDAC_RESULT ldaclib_decode(
     HANDLE_LDAC hData,
     uint8_t* p_stream,
-    char** ap_pcm,
+    void** ap_pcm,
     int frame_length,
     int* p_nbytes_used,
     LDAC_SMPL_FMT_T sample_format) {

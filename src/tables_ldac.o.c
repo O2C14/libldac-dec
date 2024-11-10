@@ -505,14 +505,14 @@ static const unsigned char sa_hc_sf0_blen6_dec_ldac[256] = {
     59, 59, 59, 59, 59, 59, 59, 59, 60, 60, 60, 60, 60, 60, 60, 60, 6,  6,  6,  6,  7,  7,  7,  7,
     8,  8,  8,  8,  56, 56, 56, 56, 57, 57, 57, 57, 9,  9,  10, 10, 53, 53, 54, 54, 55, 55, 11, 12,
     13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
-    37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52}; 
+    37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52};
 
 static const unsigned char sa_hc_sf1_blen2_dec_ldac[4] = {0, 0, 3, 1};
 
 static const unsigned char sa_hc_sf1_blen3_dec_ldac[64] = {
     1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 5, 3, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    
+
 static const unsigned char sa_hc_sf1_blen4_dec_ldac[256] = {
     15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15,
     15, 15, 15, 15, 15, 15, 15, 15, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
@@ -563,12 +563,12 @@ DECLFUNC const int gaa_4dimdec_spec_ldac[LDAC_N4DIMSPECDECTBL][4] = {
     Huffman Encoding/Decoding Structures for Scale Factor Data
 ***************************************************************************************************/
 DECLFUNC HCDEC ga_hcdec_sf0_ldac[LDAC_MAXSFCBLEN_0 - LDAC_MINSFCBLEN_0 + 1] = {
-    {&sa_hc_sf0_blen3_ldac, 8, 3, 7, 6, &sa_hc_sf0_blen3_dec_ldac},
-    {&sa_hc_sf0_blen4_ldac, 16, 4, 15, 8, &sa_hc_sf0_blen4_dec_ldac},
-    {&sa_hc_sf0_blen5_ldac, 32, 5, 31, 8, &sa_hc_sf0_blen5_dec_ldac},
-    {&sa_hc_sf0_blen6_ldac, 64, 6, 63, 8, &sa_hc_sf0_blen6_dec_ldac}};
+    {sa_hc_sf0_blen3_ldac, 8, 3, 7, 6, sa_hc_sf0_blen3_dec_ldac},
+    {sa_hc_sf0_blen4_ldac, 16, 4, 15, 8, sa_hc_sf0_blen4_dec_ldac},
+    {sa_hc_sf0_blen5_ldac, 32, 5, 31, 8, sa_hc_sf0_blen5_dec_ldac},
+    {sa_hc_sf0_blen6_ldac, 64, 6, 63, 8, sa_hc_sf0_blen6_dec_ldac}};
 DECLFUNC HCDEC ga_hcdec_sf1_ldac[LDAC_MAXSFCBLEN_2 - LDAC_MINSFCBLEN_2 + 1] = {
-    {&sa_hc_sf1_blen2_ldac, 4, 2, 3, 2, &sa_hc_sf1_blen2_dec_ldac},
-    {&sa_hc_sf1_blen3_ldac, 8, 3, 7, 6, &sa_hc_sf1_blen3_dec_ldac},
-    {&sa_hc_sf1_blen4_ldac, 16, 4, 15, 8, &sa_hc_sf1_blen4_dec_ldac},
-    {&sa_hc_sf1_blen5_ldac, 32, 5, 31, 8, &sa_hc_sf1_blen5_dec_ldac}};
+    {sa_hc_sf1_blen2_ldac, 4, 2, 3, 2, sa_hc_sf1_blen2_dec_ldac},
+    {sa_hc_sf1_blen3_ldac, 8, 3, 7, 6, sa_hc_sf1_blen3_dec_ldac},
+    {sa_hc_sf1_blen4_ldac, 16, 4, 15, 8, sa_hc_sf1_blen4_dec_ldac},
+    {sa_hc_sf1_blen5_ldac, 32, 5, 31, 8, sa_hc_sf1_blen5_dec_ldac}};
