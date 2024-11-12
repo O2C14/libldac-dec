@@ -84,7 +84,7 @@ DECLSPEC LDAC_RESULT ldaclib_get_frame_header(HANDLE_LDAC, uint8_t*, int*, int*,
 DECLSPEC LDAC_RESULT ldaclib_check_frame_header(HANDLE_LDAC, int, int);
 DECLSPEC LDAC_RESULT ldaclib_init_decode(HANDLE_LDAC, int);
 DECLSPEC LDAC_RESULT ldaclib_free_decode(HANDLE_LDAC);
-DECLSPEC LDAC_RESULT ldaclib_decode(HANDLE_LDAC, uint8_t*, char**, int, int*, LDAC_SMPL_FMT_T);
+DECLSPEC LDAC_RESULT ldaclib_decode(HANDLE_LDAC, uint8_t*, void**, int, int*, LDAC_SMPL_FMT_T);
 
 /***************************************************************************************************
     Error Code Definitions

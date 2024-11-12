@@ -10,7 +10,7 @@ DECLFUNC void free_decode_ldac(SFINFO*);
 DECLFUNC void decode_ldac(SFINFO*);
 
 /* setpcm_ldac.c */
-DECLFUNC void set_output_pcm_ldac(SFINFO*, char*[], LDAC_SMPL_FMT_T, int);
+DECLFUNC void set_output_pcm_ldac(SFINFO*, void*[], LDAC_SMPL_FMT_T, int);
 
 /* mdct_ldac.c */
 DECLFUNC void proc_imdct_ldac(SFINFO*, int);

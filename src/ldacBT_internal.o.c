@@ -94,31 +94,31 @@ DECLFUNC int ldacBT_interleave_pcm(
   if (nsmpl <= 0) {
     return 0;
   }
-  void* p_lch = pp_pcm[0];
-  void* p_rch = pp_pcm[1];
+  const void* p_lch = pp_pcm[0];
+  const void* p_rch = pp_pcm[1];
   if (nch == 2) {
     switch (fmt) {
       case LDACBT_SMPL_FMT_S16:
         for (int i = 0; i < nsmpl; i++) {
-          ((short*)p_pcm)[(i << 1) + 0] = ((short*)p_lch)[i];
-          ((short*)p_pcm)[(i << 1) + 1] = ((short*)p_rch)[i];
+          ((short*)p_pcm)[(i << 1) + 0] = ((const short*)p_lch)[i];
+          ((short*)p_pcm)[(i << 1) + 1] = ((const short*)p_rch)[i];
         }
         return 2 * 2 * nsmpl;
       case LDACBT_SMPL_FMT_S24:
         for (int i = 0; i < nsmpl * 3; i += 3) {
-          p_pcm[(i << 1) + 0] = ((unsigned char*)p_lch)[i + 0];
-          p_pcm[(i << 1) + 1] = ((unsigned char*)p_lch)[i + 1];
-          p_pcm[(i << 1) + 2] = ((unsigned char*)p_lch)[i + 2];
-          p_pcm[(i << 1) + 3] = ((unsigned char*)p_rch)[i + 0];
-          p_pcm[(i << 1) + 4] = ((unsigned char*)p_rch)[i + 1];
-          p_pcm[(i << 1) + 5] = ((unsigned char*)p_rch)[i + 2];
+          p_pcm[(i << 1) + 0] = ((const unsigned char*)p_lch)[i + 0];
+          p_pcm[(i << 1) + 1] = ((const unsigned char*)p_lch)[i + 1];
+          p_pcm[(i << 1) + 2] = ((const unsigned char*)p_lch)[i + 2];
+          p_pcm[(i << 1) + 3] = ((const unsigned char*)p_rch)[i + 0];
+          p_pcm[(i << 1) + 4] = ((const unsigned char*)p_rch)[i + 1];
+          p_pcm[(i << 1) + 5] = ((const unsigned char*)p_rch)[i + 2];
         }
         return 2 * 3 * nsmpl;
       case LDACBT_SMPL_FMT_S32:
       case LDACBT_SMPL_FMT_F32:
         for (int i = 0; i < nsmpl; i++) {
-          ((unsigned int*)p_pcm)[(i << 1) + 0] = ((unsigned int*)p_lch)[i];
-          ((unsigned int*)p_pcm)[(i << 1) + 1] = ((unsigned int*)p_rch)[i];
+          ((unsigned int*)p_pcm)[(i << 1) + 0] = ((const unsigned int*)p_lch)[i];
+          ((unsigned int*)p_pcm)[(i << 1) + 1] = ((const unsigned int*)p_rch)[i];
         }
         return 2 * 4 * nsmpl;
       default:
@@ -128,14 +128,14 @@ DECLFUNC int ldacBT_interleave_pcm(
     if (nch != 1) return 0;
     switch (fmt) {
       case LDACBT_SMPL_FMT_S16:
-        copy_data_ldac(p_pcm, *pp_pcm, 2 * nsmpl);
+        copy_data_ldac(*pp_pcm, p_pcm, 2 * nsmpl);
         return 2 * nsmpl;
       case LDACBT_SMPL_FMT_S24:
-        copy_data_ldac(p_pcm, *pp_pcm, 3 * nsmpl);
+        copy_data_ldac(*pp_pcm, p_pcm, 3 * nsmpl);
         return 3 * nsmpl;
       case LDACBT_SMPL_FMT_S32:
       case LDACBT_SMPL_FMT_F32:
-        copy_data_ldac(p_pcm, *pp_pcm, 4 * nsmpl);
+        copy_data_ldac(*pp_pcm, p_pcm, 4 * nsmpl);
         return 4 * nsmpl;
       default:
         return 0;

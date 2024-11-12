@@ -1,7 +1,7 @@
 #include "ldac.h"
 
 DECLFUNC void set_output_pcm_ldac(
-    SFINFO* p_sfinfo, char* pp_pcm[], LDAC_SMPL_FMT_T format, int nlnn) {
+    SFINFO* p_sfinfo, void* pp_pcm[], LDAC_SMPL_FMT_T format, int nlnn) {
   SCALAR* p_time;
   int nchs = p_sfinfo->cfg.ch;
   int nsmpl = npow2_ldac(nlnn);
