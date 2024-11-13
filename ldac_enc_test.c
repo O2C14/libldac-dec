@@ -103,7 +103,7 @@ typedef char ID[4];
 typedef union {
   struct {
     ID groupID;
-    long size;
+    uint32_t size;
     ID riffType;
   };
   uint8_t data[0xc];
@@ -112,8 +112,8 @@ typedef union {
 typedef union {
   struct {
     ID chunkID;
-    long chunkSize;
-    short wFormatTag;
+    uint32_t chunkSize;
+    uint16_t wFormatTag;
     uint16_t wChannels;
     uint32_t dwSamplesPerSec;
     uint32_t dwAvgBytesPerSec;
@@ -126,7 +126,7 @@ typedef union {
 typedef union {
   struct {
     ID chunkID;
-    long chunkSize;
+    uint32_t chunkSize;
   };
   uint8_t data[8];
 } DATACHUNK;
