@@ -255,15 +255,17 @@ int main(int argc, char *argv[]) {
 #if  __WIN32
   unsigned __int64 t0 = *(
       unsigned __int64 *)(0x7FFE0000 + 0x8); // like QueryUnbiasedInterruptTime
-#endif
   __int64 npack = 0;
+#endif
   while ((input_pcm_size - pcmUsedcount) >= pcmUsed) {
     result |=
         ldacBT_encode(ldacBT_enc_handle, input_pcm + pcmUsedcount, &pcmUsed,
                       pStream + streamoutputcount, &streamSize, &frameNum);
     pcmUsedcount += pcmUsed;
     streamoutputcount += streamSize;
+#if  __WIN32
     npack += 1;
+#endif
   }
   // ldacBT_encode(ldacBT_enc_handle, input_pcm + 44 + pcmUsed, &pcmUsed,
   // pStream, &streamSize, &frameNum);

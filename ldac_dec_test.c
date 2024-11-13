@@ -254,9 +254,9 @@ int main(int argc, char *argv[]) {
 #if  __WIN32
   unsigned __int64 t0 = *(
       unsigned __int64 *)(0x7FFE0000 + 0x8); // like QueryUnbiasedInterruptTime
+  __int64 npack = 0;
 #endif
 
-  __int64 npack = 0;
 
   while ((streamSize - used_Stream_count) > streamUsed) {
 
@@ -265,7 +265,9 @@ int main(int argc, char *argv[]) {
                            frame_size, &streamUsed, &out_pcm_szie);
     out_pcm_count += out_pcm_szie;
     used_Stream_count += streamUsed;
+#if  __WIN32
     npack += 1;
+#endif
   }
   if (result != 0) {
     printf("%s\r\n",get_error_code_string(ldacBT_get_error_code(ldacBT_dec_handle)));
