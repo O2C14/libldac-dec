@@ -50,6 +50,7 @@ add_library(
     ${enc_dic}/ldaclib.c
 )
 
+target_link_libraries(ldac_enc_lib m)
 
 add_executable(ldac_encoder ldac_enc_test.c)
 add_executable(ldac_decoder ldac_dec_test.c)
@@ -57,5 +58,5 @@ add_executable(auto_test auto_test.c)
 
 
 target_link_libraries(ldac_encoder ldac_enc_lib)
-target_link_libraries(ldac_decoder ldac_dec_lib)
+target_link_libraries(ldac_decoder ldac_dec_lib m)
 endif()
